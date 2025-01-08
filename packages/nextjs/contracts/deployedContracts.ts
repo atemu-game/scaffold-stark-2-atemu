@@ -7,7 +7,7 @@ const deployedContracts = {
   sepolia: {
     PackAtemu: {
       address:
-        "0x506c81745384a42161da61b65c20cf73ad91e8004a843fc67cd7b6c264613",
+        "0x70c26d3c0e10a6e6a4b9fb3a240ddb855a360577d490d2cb558562c1c373720",
       abi: [
         {
           type: "struct",
@@ -701,11 +701,11 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x36bd652c9fd343b055723d0af9249f12d54ca2556c7e0563675342547d473d2",
+        "0x1259013d6655f787d5e4d2cef5bdaeb71b2581767ab014744dbe6e0bcc76d13",
     },
     CardCollectionFactory: {
       address:
-        "0x56f808b6522f5b865710f3173fd8d917fdffe6e0b5cb462b67f222f2b569ce5",
+        "0x1feb9d472dae3ea0611a9880c128351542a44039ff7bc0542490be26702f791",
       abi: [
         {
           type: "impl",
@@ -747,44 +747,32 @@ const deployedContracts = {
         },
         {
           type: "struct",
-          name: "contracts::CardCollectionFactory::CollectionDistribution",
+          name: "contracts::CardCollectionFactory::CardsDistribution",
           members: [
             {
               name: "token_id",
               type: "core::integer::u256",
             },
             {
-              name: "name",
-              type: "core::felt252",
-            },
-            {
-              name: "class",
-              type: "core::felt252",
-            },
-            {
-              name: "rarity",
-              type: "core::felt252",
-            },
-            {
-              name: "rate",
+              name: "rarityRate",
               type: "core::integer::u256",
             },
           ],
         },
         {
           type: "struct",
-          name: "contracts::CardCollectionFactory::PackCollectionInformation",
+          name: "contracts::CardCollectionFactory::CollectionPackInfo",
           members: [
+            {
+              name: "collection_address",
+              type: "core::starknet::contract_address::ContractAddress",
+            },
             {
               name: "pack_address",
               type: "core::starknet::contract_address::ContractAddress",
             },
             {
-              name: "card_collection",
-              type: "core::starknet::contract_address::ContractAddress",
-            },
-            {
-              name: "num_cards",
+              name: "amount_cards_in_pack",
               type: "core::integer::u32",
             },
           ],
@@ -806,7 +794,7 @@ const deployedContracts = {
                   type: "core::starknet::contract_address::ContractAddress",
                 },
                 {
-                  name: "num_cards",
+                  name: "amount_cards_in_pack",
                   type: "core::integer::u32",
                 },
               ],
@@ -815,15 +803,19 @@ const deployedContracts = {
             },
             {
               type: "function",
-              name: "open_pack",
+              name: "update_collection",
               inputs: [
                 {
                   name: "collection",
                   type: "core::starknet::contract_address::ContractAddress",
                 },
                 {
-                  name: "token_id",
-                  type: "core::integer::u256",
+                  name: "pack_address",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+                {
+                  name: "amount_cards_in_pack",
+                  type: "core::integer::u32",
                 },
               ],
               outputs: [],
@@ -843,51 +835,47 @@ const deployedContracts = {
             },
             {
               type: "function",
-              name: "update_collection",
+              name: "add_cards_distribution",
               inputs: [
                 {
                   name: "collection",
                   type: "core::starknet::contract_address::ContractAddress",
                 },
+                {
+                  name: "cards",
+                  type: "core::array::Array::<contracts::CardCollectionFactory::CardsDistribution>",
+                },
+              ],
+              outputs: [],
+              state_mutability: "external",
+            },
+            {
+              type: "function",
+              name: "update_cards_distribution",
+              inputs: [
+                {
+                  name: "collection",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+                {
+                  name: "cards",
+                  type: "core::array::Array::<contracts::CardCollectionFactory::CardsDistribution>",
+                },
+              ],
+              outputs: [],
+              state_mutability: "external",
+            },
+            {
+              type: "function",
+              name: "open_pack",
+              inputs: [
                 {
                   name: "pack_address",
                   type: "core::starknet::contract_address::ContractAddress",
                 },
                 {
-                  name: "num_cards",
-                  type: "core::integer::u32",
-                },
-              ],
-              outputs: [],
-              state_mutability: "external",
-            },
-            {
-              type: "function",
-              name: "add_collection_distributions",
-              inputs: [
-                {
-                  name: "collection",
-                  type: "core::starknet::contract_address::ContractAddress",
-                },
-                {
-                  name: "cards",
-                  type: "core::array::Array::<contracts::CardCollectionFactory::CollectionDistribution>",
-                },
-              ],
-              outputs: [],
-              state_mutability: "external",
-            },
-            {
-              type: "function",
-              name: "update_collection_distributions",
-              inputs: [
-                {
-                  name: "collection",
-                  type: "core::starknet::contract_address::ContractAddress",
-                },
-                {
-                  name: "cards",
-                  type: "core::array::Array::<contracts::CardCollectionFactory::CollectionDistribution>",
+                  name: "token_id",
+                  type: "core::integer::u256",
                 },
               ],
               outputs: [],
@@ -904,7 +892,23 @@ const deployedContracts = {
               ],
               outputs: [
                 {
-                  type: "contracts::CardCollectionFactory::PackCollectionInformation",
+                  type: "contracts::CardCollectionFactory::CollectionPackInfo",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "get_pack",
+              inputs: [
+                {
+                  name: "pack",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [
+                {
+                  type: "contracts::CardCollectionFactory::CollectionPackInfo",
                 },
               ],
               state_mutability: "view",
@@ -933,7 +937,18 @@ const deployedContracts = {
             },
             {
               type: "function",
-              name: "get_collection_distribution",
+              name: "get_all_pack_addresses",
+              inputs: [],
+              outputs: [
+                {
+                  type: "core::array::Array::<core::starknet::contract_address::ContractAddress>",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "get_cards_distribution",
               inputs: [
                 {
                   name: "collection",
@@ -942,10 +957,33 @@ const deployedContracts = {
               ],
               outputs: [
                 {
-                  type: "core::array::Array::<contracts::CardCollectionFactory::CollectionDistribution>",
+                  type: "core::array::Array::<contracts::CardCollectionFactory::CardsDistribution>",
                 },
               ],
               state_mutability: "view",
+            },
+          ],
+        },
+        {
+          type: "impl",
+          name: "UpgradeableImpl",
+          interface_name: "openzeppelin_upgrades::interface::IUpgradeable",
+        },
+        {
+          type: "interface",
+          name: "openzeppelin_upgrades::interface::IUpgradeable",
+          items: [
+            {
+              type: "function",
+              name: "upgrade",
+              inputs: [
+                {
+                  name: "new_class_hash",
+                  type: "core::starknet::class_hash::ClassHash",
+                },
+              ],
+              outputs: [],
+              state_mutability: "external",
             },
           ],
         },
@@ -1018,18 +1056,18 @@ const deployedContracts = {
               type: "core::starknet::contract_address::ContractAddress",
             },
             {
-              name: "card_collection_class_hash",
+              name: "collection_class_hash",
               type: "core::starknet::class_hash::ClassHash",
             },
             {
-              name: "random_oracleless_contract_address",
+              name: "random_oracleless_address",
               type: "core::starknet::contract_address::ContractAddress",
             },
           ],
         },
         {
           type: "event",
-          name: "contracts::CardCollectionFactory::CardCollectionFactory::PackPhaseCreated",
+          name: "contracts::CardCollectionFactory::CardCollectionFactory::CollectionCreated",
           kind: "struct",
           members: [
             {
@@ -1038,7 +1076,7 @@ const deployedContracts = {
               kind: "key",
             },
             {
-              name: "collection",
+              name: "collection_address",
               type: "core::starknet::contract_address::ContractAddress",
               kind: "data",
             },
@@ -1048,7 +1086,34 @@ const deployedContracts = {
               kind: "data",
             },
             {
-              name: "num_cards",
+              name: "amount_cards_in_pack",
+              type: "core::integer::u32",
+              kind: "data",
+            },
+          ],
+        },
+        {
+          type: "event",
+          name: "contracts::CardCollectionFactory::CardCollectionFactory::CollectionUpdated",
+          kind: "struct",
+          members: [
+            {
+              name: "owner",
+              type: "core::starknet::contract_address::ContractAddress",
+              kind: "key",
+            },
+            {
+              name: "collection_address",
+              type: "core::starknet::contract_address::ContractAddress",
+              kind: "data",
+            },
+            {
+              name: "pack_address",
+              type: "core::starknet::contract_address::ContractAddress",
+              kind: "data",
+            },
+            {
+              name: "amount_cards_in_pack",
               type: "core::integer::u32",
               kind: "data",
             },
@@ -1065,7 +1130,7 @@ const deployedContracts = {
               kind: "key",
             },
             {
-              name: "collection",
+              name: "collection_address",
               type: "core::starknet::contract_address::ContractAddress",
               kind: "data",
             },
@@ -1082,50 +1147,8 @@ const deployedContracts = {
           ],
         },
         {
-          type: "struct",
-          name: "core::array::Span::<core::integer::u256>",
-          members: [
-            {
-              name: "snapshot",
-              type: "@core::array::Array::<core::integer::u256>",
-            },
-          ],
-        },
-        {
           type: "event",
-          name: "contracts::CardCollectionFactory::CardCollectionFactory::BatchCardsMinted",
-          kind: "struct",
-          members: [
-            {
-              name: "request_id",
-              type: "core::integer::u64",
-              kind: "data",
-            },
-            {
-              name: "minter",
-              type: "core::starknet::contract_address::ContractAddress",
-              kind: "data",
-            },
-            {
-              name: "card_collection",
-              type: "core::starknet::contract_address::ContractAddress",
-              kind: "data",
-            },
-            {
-              name: "num_cards",
-              type: "core::integer::u32",
-              kind: "data",
-            },
-            {
-              name: "token_ids_span",
-              type: "core::array::Span::<core::integer::u256>",
-              kind: "data",
-            },
-          ],
-        },
-        {
-          type: "event",
-          name: "contracts::CardCollectionFactory::CardCollectionFactory::CollectionDistributionsSet",
+          name: "contracts::CardCollectionFactory::CardCollectionFactory::CardsDistributionSet",
           kind: "struct",
           members: [
             {
@@ -1199,12 +1222,41 @@ const deployedContracts = {
         },
         {
           type: "event",
+          name: "openzeppelin_upgrades::upgradeable::UpgradeableComponent::Upgraded",
+          kind: "struct",
+          members: [
+            {
+              name: "class_hash",
+              type: "core::starknet::class_hash::ClassHash",
+              kind: "data",
+            },
+          ],
+        },
+        {
+          type: "event",
+          name: "openzeppelin_upgrades::upgradeable::UpgradeableComponent::Event",
+          kind: "enum",
+          variants: [
+            {
+              name: "Upgraded",
+              type: "openzeppelin_upgrades::upgradeable::UpgradeableComponent::Upgraded",
+              kind: "nested",
+            },
+          ],
+        },
+        {
+          type: "event",
           name: "contracts::CardCollectionFactory::CardCollectionFactory::Event",
           kind: "enum",
           variants: [
             {
-              name: "PackPhaseCreated",
-              type: "contracts::CardCollectionFactory::CardCollectionFactory::PackPhaseCreated",
+              name: "CollectionCreated",
+              type: "contracts::CardCollectionFactory::CardCollectionFactory::CollectionCreated",
+              kind: "nested",
+            },
+            {
+              name: "CollectionUpdated",
+              type: "contracts::CardCollectionFactory::CardCollectionFactory::CollectionUpdated",
               kind: "nested",
             },
             {
@@ -1213,13 +1265,8 @@ const deployedContracts = {
               kind: "nested",
             },
             {
-              name: "BatchCardsMinted",
-              type: "contracts::CardCollectionFactory::CardCollectionFactory::BatchCardsMinted",
-              kind: "nested",
-            },
-            {
-              name: "CollectionDistributionsSet",
-              type: "contracts::CardCollectionFactory::CardCollectionFactory::CollectionDistributionsSet",
+              name: "CardsDistributionSet",
+              type: "contracts::CardCollectionFactory::CardCollectionFactory::CardsDistributionSet",
               kind: "nested",
             },
             {
@@ -1232,11 +1279,16 @@ const deployedContracts = {
               type: "openzeppelin_security::reentrancyguard::ReentrancyGuardComponent::Event",
               kind: "flat",
             },
+            {
+              name: "UpgradeableEvent",
+              type: "openzeppelin_upgrades::upgradeable::UpgradeableComponent::Event",
+              kind: "flat",
+            },
           ],
         },
       ],
       classHash:
-        "0xd0e6988341771b0d65491b6b638265a3e058c4814b9e84cbdad92998400a62",
+        "0x1b2979235f7223268a96841bd83e6fbc9401941fbdc06d42c8e0a437c5bb2d7",
     },
   },
 } as const;

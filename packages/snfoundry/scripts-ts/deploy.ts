@@ -61,8 +61,8 @@ const deployScript = async (): Promise<void> => {
     contract: "CardCollectionFactory",
     constructorArgs: {
       owner: deployer.address,
-      card_collection_class_hash: "0x7b2323590bdef4d4cd25e081eff3902a819b4798bd596dc9e5c62cdce688b9d",
-      random_oracleless_contract_address: "0x02da9C98a2E5B60EA441C14371d062395cFB3864f1b6Fead23CE8Bc47b3d2ECD",
+      collection_class_hash: "0x7b2323590bdef4d4cd25e081eff3902a819b4798bd596dc9e5c62cdce688b9d",
+      random_oracleless_address: "0x02da9C98a2E5B60EA441C14371d062395cFB3864f1b6Fead23CE8Bc47b3d2ECD",
     },
   });
   // await deployContract_NotWait({

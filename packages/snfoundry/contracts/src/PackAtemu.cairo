@@ -48,11 +48,11 @@ mod PackAtemu {
     fn constructor(ref self: ContractState, owner: ContractAddress) {
         self.erc721.initializer("PackAtemu", "PA", "");
         self.ownable.initializer(owner);
-        self.safe_mint(owner, 1);
-        self.safe_mint(owner, 2);
-        self.safe_mint(owner, 3);
-        self.safe_mint(owner, 4);
-        self.safe_mint(owner, 5);
+        // loop to mint all cards
+        let mut x: u256 = 10;
+        for i in 0..x {
+            self.safe_mint(owner, i);
+        }
     }
 
     #[generate_trait]
@@ -65,7 +65,6 @@ mod PackAtemu {
 
         #[external(v0)]
         fn safe_mint(ref self: ContractState, recipient: ContractAddress, token_id: u256) {
-            // self.ownable.assert_only_owner();
             self.erc721.safe_mint(recipient, token_id, ArrayTrait::new().span());
         }
 
