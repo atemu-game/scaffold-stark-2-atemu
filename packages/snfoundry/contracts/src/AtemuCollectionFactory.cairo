@@ -66,9 +66,9 @@ trait IRandom<TContractState> {
 }
 
 #[starknet::contract]
-mod CardCollectionFactory {
+mod AtemuCollectionFactory {
     use super::IRandomDispatcherTrait;
-    use super::super::CardCollection::ICardCollectionDispatcherTrait;
+    use super::super::AtemuCollection::ICardCollectionDispatcherTrait;
     use super::{CardsDistribution, CollectionPackInfo};
 
     use starknet::{
@@ -211,7 +211,7 @@ mod CardCollectionFactory {
 
             // Get a random salt
             let random_contract_address = self.random_oracleless_address.read();
-            let random_contract_dispatcher = contracts::CardCollectionFactory::IRandomDispatcher {
+            let random_contract_dispatcher = contracts::AtemuCollectionFactory::IRandomDispatcher {
                 contract_address: random_contract_address,
             };
             let mut salt: felt252 = random_contract_dispatcher.felt252(caller.into());
@@ -352,7 +352,9 @@ mod CardCollectionFactory {
                     storage_vec
                         .at(index)
                         .write(
-                            CardsDistribution { token_id: 0, rarity_rate: u256 { low: 0, high: 0 } },
+                            CardsDistribution {
+                                token_id: 0, rarity_rate: u256 { low: 0, high: 0 },
+                            },
                         );
                 }
             }
@@ -420,7 +422,7 @@ mod CardCollectionFactory {
             let phase_details = self.get_collection(collection_address);
             let amount_cards_in_pack = phase_details.amount_cards_in_pack;
 
-            let card_dispatcher = contracts::CardCollection::ICardCollectionDispatcher {
+            let card_dispatcher = contracts::AtemuCollection::ICardCollectionDispatcher {
                 contract_address: collection_address,
             };
             let selected_cards = self
@@ -466,8 +468,7 @@ mod CardCollectionFactory {
             for i in 0..amount_cards_in_pack {
                 // 5a. Normalize random_u256 to [0, total_weight)
                 let random_contract_address = self.random_oracleless_address.read();
-                let random_contract_dispatcher =
-                    contracts::CardCollectionFactory::IRandomDispatcher {
+                let random_contract_dispatcher = contracts::AtemuCollectionFactory::IRandomDispatcher {
                     contract_address: random_contract_address,
                 };
                 let mut random_u256: u256 = random_contract_dispatcher.u256(i.into());

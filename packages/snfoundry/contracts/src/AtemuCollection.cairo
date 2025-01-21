@@ -20,7 +20,7 @@ trait ICardCollection<TContractState> {
 }
 
 #[starknet::contract]
-mod CardCollection {
+mod AtemuCollection {
     use openzeppelin::access::ownable::OwnableComponent;
     use openzeppelin::introspection::src5::SRC5Component;
     use openzeppelin::security::pausable::PausableComponent;

@@ -5,9 +5,9 @@
 
 const deployedContracts = {
   sepolia: {
-    PackAtemu: {
+    AtemuPack: {
       address:
-        "0x70c26d3c0e10a6e6a4b9fb3a240ddb855a360577d490d2cb558562c1c373720",
+        "0x17b1a4256932f9105696550438d2ce5c0d4d4378029ad9c8e8804ff5a958230",
       abi: [
         {
           type: "struct",
@@ -679,7 +679,7 @@ const deployedContracts = {
         },
         {
           type: "event",
-          name: "contracts::PackAtemu::PackAtemu::Event",
+          name: "contracts::AtemuPack::AtemuPack::Event",
           kind: "enum",
           variants: [
             {
@@ -701,17 +701,17 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x1259013d6655f787d5e4d2cef5bdaeb71b2581767ab014744dbe6e0bcc76d13",
+        "0x36dd67ba04994528f026ec561def870e089afb3ff3331f32c3ce0aa82d49dd3",
     },
-    CardCollectionFactory: {
+    AtemuCollectionFactory: {
       address:
-        "0x1feb9d472dae3ea0611a9880c128351542a44039ff7bc0542490be26702f791",
+        "0x2a64600cdc15f9a3d7376582f928ae85b43dd5880caef55c73418267daf44c2",
       abi: [
         {
           type: "impl",
           name: "CardCollectionFactoryImpl",
           interface_name:
-            "contracts::CardCollectionFactory::ICardCollectionFactory",
+            "contracts::AtemuCollectionFactory::ICardCollectionFactory",
         },
         {
           type: "struct",
@@ -747,21 +747,21 @@ const deployedContracts = {
         },
         {
           type: "struct",
-          name: "contracts::CardCollectionFactory::CardsDistribution",
+          name: "contracts::AtemuCollectionFactory::CardsDistribution",
           members: [
             {
               name: "token_id",
               type: "core::integer::u256",
             },
             {
-              name: "rarityRate",
+              name: "rarity_rate",
               type: "core::integer::u256",
             },
           ],
         },
         {
           type: "struct",
-          name: "contracts::CardCollectionFactory::CollectionPackInfo",
+          name: "contracts::AtemuCollectionFactory::CollectionPackInfo",
           members: [
             {
               name: "collection_address",
@@ -779,7 +779,7 @@ const deployedContracts = {
         },
         {
           type: "interface",
-          name: "contracts::CardCollectionFactory::ICardCollectionFactory",
+          name: "contracts::AtemuCollectionFactory::ICardCollectionFactory",
           items: [
             {
               type: "function",
@@ -835,7 +835,7 @@ const deployedContracts = {
             },
             {
               type: "function",
-              name: "add_cards_distribution",
+              name: "set_cards_distribution",
               inputs: [
                 {
                   name: "collection",
@@ -843,7 +843,7 @@ const deployedContracts = {
                 },
                 {
                   name: "cards",
-                  type: "core::array::Array::<contracts::CardCollectionFactory::CardsDistribution>",
+                  type: "core::array::Array::<contracts::AtemuCollectionFactory::CardsDistribution>",
                 },
               ],
               outputs: [],
@@ -859,7 +859,7 @@ const deployedContracts = {
                 },
                 {
                   name: "cards",
-                  type: "core::array::Array::<contracts::CardCollectionFactory::CardsDistribution>",
+                  type: "core::array::Array::<contracts::AtemuCollectionFactory::CardsDistribution>",
                 },
               ],
               outputs: [],
@@ -892,7 +892,7 @@ const deployedContracts = {
               ],
               outputs: [
                 {
-                  type: "contracts::CardCollectionFactory::CollectionPackInfo",
+                  type: "contracts::AtemuCollectionFactory::CollectionPackInfo",
                 },
               ],
               state_mutability: "view",
@@ -908,7 +908,7 @@ const deployedContracts = {
               ],
               outputs: [
                 {
-                  type: "contracts::CardCollectionFactory::CollectionPackInfo",
+                  type: "contracts::AtemuCollectionFactory::CollectionPackInfo",
                 },
               ],
               state_mutability: "view",
@@ -957,7 +957,7 @@ const deployedContracts = {
               ],
               outputs: [
                 {
-                  type: "core::array::Array::<contracts::CardCollectionFactory::CardsDistribution>",
+                  type: "core::array::Array::<contracts::AtemuCollectionFactory::CardsDistribution>",
                 },
               ],
               state_mutability: "view",
@@ -1067,7 +1067,7 @@ const deployedContracts = {
         },
         {
           type: "event",
-          name: "contracts::CardCollectionFactory::CardCollectionFactory::CollectionCreated",
+          name: "contracts::AtemuCollectionFactory::AtemuCollectionFactory::CollectionCreated",
           kind: "struct",
           members: [
             {
@@ -1094,7 +1094,7 @@ const deployedContracts = {
         },
         {
           type: "event",
-          name: "contracts::CardCollectionFactory::CardCollectionFactory::CollectionUpdated",
+          name: "contracts::AtemuCollectionFactory::AtemuCollectionFactory::CollectionUpdated",
           kind: "struct",
           members: [
             {
@@ -1121,7 +1121,7 @@ const deployedContracts = {
         },
         {
           type: "event",
-          name: "contracts::CardCollectionFactory::CardCollectionFactory::PackOpened",
+          name: "contracts::AtemuCollectionFactory::AtemuCollectionFactory::PackOpened",
           kind: "struct",
           members: [
             {
@@ -1148,7 +1148,7 @@ const deployedContracts = {
         },
         {
           type: "event",
-          name: "contracts::CardCollectionFactory::CardCollectionFactory::CardsDistributionSet",
+          name: "contracts::AtemuCollectionFactory::AtemuCollectionFactory::CardsDistributionSet",
           kind: "struct",
           members: [
             {
@@ -1246,27 +1246,27 @@ const deployedContracts = {
         },
         {
           type: "event",
-          name: "contracts::CardCollectionFactory::CardCollectionFactory::Event",
+          name: "contracts::AtemuCollectionFactory::AtemuCollectionFactory::Event",
           kind: "enum",
           variants: [
             {
               name: "CollectionCreated",
-              type: "contracts::CardCollectionFactory::CardCollectionFactory::CollectionCreated",
+              type: "contracts::AtemuCollectionFactory::AtemuCollectionFactory::CollectionCreated",
               kind: "nested",
             },
             {
               name: "CollectionUpdated",
-              type: "contracts::CardCollectionFactory::CardCollectionFactory::CollectionUpdated",
+              type: "contracts::AtemuCollectionFactory::AtemuCollectionFactory::CollectionUpdated",
               kind: "nested",
             },
             {
               name: "PackOpened",
-              type: "contracts::CardCollectionFactory::CardCollectionFactory::PackOpened",
+              type: "contracts::AtemuCollectionFactory::AtemuCollectionFactory::PackOpened",
               kind: "nested",
             },
             {
               name: "CardsDistributionSet",
-              type: "contracts::CardCollectionFactory::CardCollectionFactory::CardsDistributionSet",
+              type: "contracts::AtemuCollectionFactory::AtemuCollectionFactory::CardsDistributionSet",
               kind: "nested",
             },
             {
@@ -1288,7 +1288,7 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x1b2979235f7223268a96841bd83e6fbc9401941fbdc06d42c8e0a437c5bb2d7",
+        "0x45674a309988db6b1511a17d023587a614a930600b5a636ea23a66ad23d3064",
     },
   },
 } as const;

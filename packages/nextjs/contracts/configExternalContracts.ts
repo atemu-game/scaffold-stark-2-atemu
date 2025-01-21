@@ -169,7 +169,7 @@ const configExternalContracts = {
         },
       ],
     },
-    CardCollection: {
+    AtemuCollection: {
       address:
         "0x036f9b45bdc1c82cb874d71ac95e42a4eab89063e0f2f7adc8906a20bdc6cc8c",
       classHash:
@@ -987,7 +987,7 @@ const configExternalContracts = {
         },
         {
           type: "event",
-          name: "contracts::CardCollection::CardCollection::Event",
+          name: "contracts::AtemuCollection::AtemuCollection::Event",
           kind: "enum",
           variants: [
             {

@@ -44,7 +44,7 @@ import { green } from "./helpers/colorize-log";
  */
 const deployScript = async (): Promise<void> => {
   // await deployContract({
-  //   contract: "CardCollection",
+  //   contract: "AtemuCollection",
   //   constructorArgs: {
   //     owner: deployer.address,
   //     card_factory: "0x0",
@@ -52,22 +52,23 @@ const deployScript = async (): Promise<void> => {
   //   },
   // });
   await deployContract({
-    contract: "PackAtemu",
+    contract: "AtemuPack",
     constructorArgs: {
       owner: deployer.address,
     },
   });
   await deployContract({
-    contract: "CardCollectionFactory",
+    contract: "AtemuCollectionFactory",
     constructorArgs: {
       owner: deployer.address,
-      collection_class_hash: "0x7b2323590bdef4d4cd25e081eff3902a819b4798bd596dc9e5c62cdce688b9d",
+      collection_class_hash: "0x07b2323590bdef4d4cd25e081eff3902a819b4798bd596dc9e5c62cdce688b9d",
       random_oracleless_address: "0x02da9C98a2E5B60EA441C14371d062395cFB3864f1b6Fead23CE8Bc47b3d2ECD",
     },
   });
+  // Deploy Random Oracless on SEPOLIA
   // await deployContract_NotWait({
   //   salt: "0x7b2323590bdef4d4cd25e081eff3902a819b4798bd596dc9e5c62cdce688b9d",
-  //   classHash: "0x07ddaaa4b8dc38c67481ae52968381f17b895f685cd976e10ab22be1572f72dd", // sepolia
+  //   classHash: "0x07ddaaa4b8dc38c67481ae52968381f17b895f685cd976e10ab22be1572f72dd",
   //   constructorCalldata: [],
   // });
 };

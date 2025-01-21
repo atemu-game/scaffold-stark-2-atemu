@@ -2,7 +2,7 @@
 // Compatible with OpenZeppelin Contracts for Cairo ^0.20.0
 
 #[starknet::contract]
-mod PackAtemu {
+mod AtemuPack {
     use core::num::traits::Zero;
     use openzeppelin::access::ownable::OwnableComponent;
     use openzeppelin::introspection::src5::SRC5Component;
@@ -46,7 +46,7 @@ mod PackAtemu {
 
     #[constructor]
     fn constructor(ref self: ContractState, owner: ContractAddress) {
-        self.erc721.initializer("PackAtemu", "PA", "");
+        self.erc721.initializer("AtemuPack", "PA", "");
         self.ownable.initializer(owner);
         // loop to mint all cards
         let mut x: u256 = 10;
