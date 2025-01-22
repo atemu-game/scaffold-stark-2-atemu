@@ -1,3 +1,3 @@
-mod CardCollection;
-mod CardCollectionFactory;
-mod PackAtemu;
+mod AtemuCollection;
+mod AtemuCollectionFactory;
+mod AtemuPack;

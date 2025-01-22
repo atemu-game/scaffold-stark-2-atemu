@@ -123,7 +123,7 @@ const findContractFile = (
   if (!matchingFile) {
     throw new Error(
       `Could not find ${fileType} file for contract "${contract}". ` +
-        `Try removing snfoundry/contracts/target, then run 'yarn compile' and check if your contract name is correct inside the contracts/target/dev directory.`
+      `Try removing snfoundry/contracts/target, then run 'yarn compile' and check if your contract name is correct inside the contracts/target/dev directory.`
     );
   }
 
@@ -329,5 +329,5 @@ export {
   loadExistingDeployments,
   exportDeployments,
   executeDeployCalls,
-  resetDeployments,
+  resetDeployments, deployContract_NotWait, declareIfNot_NotWait,
 };

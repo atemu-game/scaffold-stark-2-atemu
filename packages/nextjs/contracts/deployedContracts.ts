@@ -5,9 +5,9 @@
 
 const deployedContracts = {
   sepolia: {
-    PackAtemu: {
+    AtemuPack: {
       address:
-        "0x115773e8a579b01fedaf25871d401be18a78881b57b8318e47ceb201219accc",
+        "0x17b1a4256932f9105696550438d2ce5c0d4d4378029ad9c8e8804ff5a958230",
       abi: [
         {
           type: "struct",
@@ -679,7 +679,7 @@ const deployedContracts = {
         },
         {
           type: "event",
-          name: "contracts::PackAtemu::PackAtemu::Event",
+          name: "contracts::AtemuPack::AtemuPack::Event",
           kind: "enum",
           variants: [
             {
@@ -701,17 +701,17 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x2bb3ca82cb5fe0d4f5072c4089c232f411de6968db12cb47ee5000c3dea6121",
+        "0x36dd67ba04994528f026ec561def870e089afb3ff3331f32c3ce0aa82d49dd3",
     },
-    CardCollectionFactory: {
+    AtemuCollectionFactory: {
       address:
-        "0x342aa0ca46170476105c38486438dae5bb8ac97b9dc86f5e253fa8257a4a4d7",
+        "0x2a64600cdc15f9a3d7376582f928ae85b43dd5880caef55c73418267daf44c2",
       abi: [
         {
           type: "impl",
           name: "CardCollectionFactoryImpl",
           interface_name:
-            "contracts::CardCollectionFactory::ICardCollectionFactory",
+            "contracts::AtemuCollectionFactory::ICardCollectionFactory",
         },
         {
           type: "struct",
@@ -747,51 +747,39 @@ const deployedContracts = {
         },
         {
           type: "struct",
-          name: "contracts::CardCollectionFactory::CollectionDistribution",
+          name: "contracts::AtemuCollectionFactory::CardsDistribution",
           members: [
             {
               name: "token_id",
               type: "core::integer::u256",
             },
             {
-              name: "name",
-              type: "core::felt252",
-            },
-            {
-              name: "class",
-              type: "core::felt252",
-            },
-            {
-              name: "rarity",
-              type: "core::felt252",
-            },
-            {
-              name: "rate",
+              name: "rarity_rate",
               type: "core::integer::u256",
             },
           ],
         },
         {
           type: "struct",
-          name: "contracts::CardCollectionFactory::PackCollectionInformation",
+          name: "contracts::AtemuCollectionFactory::CollectionPackInfo",
           members: [
+            {
+              name: "collection_address",
+              type: "core::starknet::contract_address::ContractAddress",
+            },
             {
               name: "pack_address",
               type: "core::starknet::contract_address::ContractAddress",
             },
             {
-              name: "card_collection",
-              type: "core::starknet::contract_address::ContractAddress",
-            },
-            {
-              name: "num_cards",
+              name: "amount_cards_in_pack",
               type: "core::integer::u32",
             },
           ],
         },
         {
           type: "interface",
-          name: "contracts::CardCollectionFactory::ICardCollectionFactory",
+          name: "contracts::AtemuCollectionFactory::ICardCollectionFactory",
           items: [
             {
               type: "function",
@@ -806,7 +794,7 @@ const deployedContracts = {
                   type: "core::starknet::contract_address::ContractAddress",
                 },
                 {
-                  name: "num_cards",
+                  name: "amount_cards_in_pack",
                   type: "core::integer::u32",
                 },
               ],
@@ -815,15 +803,35 @@ const deployedContracts = {
             },
             {
               type: "function",
-              name: "open_pack",
+              name: "update_collection",
               inputs: [
                 {
                   name: "collection",
                   type: "core::starknet::contract_address::ContractAddress",
                 },
                 {
-                  name: "token_id",
-                  type: "core::integer::u256",
+                  name: "pack_address",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+                {
+                  name: "amount_cards_in_pack",
+                  type: "core::integer::u32",
+                },
+              ],
+              outputs: [],
+              state_mutability: "external",
+            },
+            {
+              type: "function",
+              name: "update_pack",
+              inputs: [
+                {
+                  name: "pack",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+                {
+                  name: "pack_address",
+                  type: "core::starknet::contract_address::ContractAddress",
                 },
               ],
               outputs: [],
@@ -843,99 +851,51 @@ const deployedContracts = {
             },
             {
               type: "function",
-              name: "set_random_oracle_callback_fee_limit",
-              inputs: [
-                {
-                  name: "random_oracle_callback_fee_limit",
-                  type: "core::integer::u128",
-                },
-              ],
-              outputs: [],
-              state_mutability: "external",
-            },
-            {
-              type: "function",
-              name: "set_max_random_oracle_callback_fee_deposit",
-              inputs: [
-                {
-                  name: "max_random_oracle_callback_fee_deposit",
-                  type: "core::integer::u256",
-                },
-              ],
-              outputs: [],
-              state_mutability: "external",
-            },
-            {
-              type: "function",
-              name: "update_collection",
+              name: "set_cards_distribution",
               inputs: [
                 {
                   name: "collection",
                   type: "core::starknet::contract_address::ContractAddress",
                 },
+                {
+                  name: "cards",
+                  type: "core::array::Array::<contracts::AtemuCollectionFactory::CardsDistribution>",
+                },
+              ],
+              outputs: [],
+              state_mutability: "external",
+            },
+            {
+              type: "function",
+              name: "update_cards_distribution",
+              inputs: [
+                {
+                  name: "collection",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+                {
+                  name: "cards",
+                  type: "core::array::Array::<contracts::AtemuCollectionFactory::CardsDistribution>",
+                },
+              ],
+              outputs: [],
+              state_mutability: "external",
+            },
+            {
+              type: "function",
+              name: "open_pack",
+              inputs: [
                 {
                   name: "pack_address",
                   type: "core::starknet::contract_address::ContractAddress",
                 },
                 {
-                  name: "num_cards",
-                  type: "core::integer::u32",
+                  name: "token_id",
+                  type: "core::integer::u256",
                 },
               ],
               outputs: [],
               state_mutability: "external",
-            },
-            {
-              type: "function",
-              name: "add_collection_distributions",
-              inputs: [
-                {
-                  name: "collection",
-                  type: "core::starknet::contract_address::ContractAddress",
-                },
-                {
-                  name: "cards",
-                  type: "core::array::Array::<contracts::CardCollectionFactory::CollectionDistribution>",
-                },
-              ],
-              outputs: [],
-              state_mutability: "external",
-            },
-            {
-              type: "function",
-              name: "update_collection_distributions",
-              inputs: [
-                {
-                  name: "collection",
-                  type: "core::starknet::contract_address::ContractAddress",
-                },
-                {
-                  name: "cards",
-                  type: "core::array::Array::<contracts::CardCollectionFactory::CollectionDistribution>",
-                },
-              ],
-              outputs: [],
-              state_mutability: "external",
-            },
-            {
-              type: "function",
-              name: "generate_random",
-              inputs: [
-                {
-                  name: "seed",
-                  type: "core::felt252",
-                },
-                {
-                  name: "upper_bound",
-                  type: "core::felt252",
-                },
-              ],
-              outputs: [
-                {
-                  type: "core::felt252",
-                },
-              ],
-              state_mutability: "view",
             },
             {
               type: "function",
@@ -948,7 +908,23 @@ const deployedContracts = {
               ],
               outputs: [
                 {
-                  type: "contracts::CardCollectionFactory::PackCollectionInformation",
+                  type: "contracts::AtemuCollectionFactory::CollectionPackInfo",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "get_pack",
+              inputs: [
+                {
+                  name: "pack",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [
+                {
+                  type: "contracts::AtemuCollectionFactory::CollectionPackInfo",
                 },
               ],
               state_mutability: "view",
@@ -966,28 +942,6 @@ const deployedContracts = {
             },
             {
               type: "function",
-              name: "get_random_oracle_callback_fee_limit",
-              inputs: [],
-              outputs: [
-                {
-                  type: "core::integer::u128",
-                },
-              ],
-              state_mutability: "view",
-            },
-            {
-              type: "function",
-              name: "get_max_random_oracle_callback_fee_deposit",
-              inputs: [],
-              outputs: [
-                {
-                  type: "core::integer::u256",
-                },
-              ],
-              state_mutability: "view",
-            },
-            {
-              type: "function",
               name: "get_all_collection_addresses",
               inputs: [],
               outputs: [
@@ -999,7 +953,18 @@ const deployedContracts = {
             },
             {
               type: "function",
-              name: "get_collection_distribution",
+              name: "get_all_pack_addresses",
+              inputs: [],
+              outputs: [
+                {
+                  type: "core::array::Array::<core::starknet::contract_address::ContractAddress>",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "get_cards_distribution",
               inputs: [
                 {
                   name: "collection",
@@ -1008,10 +973,33 @@ const deployedContracts = {
               ],
               outputs: [
                 {
-                  type: "core::array::Array::<contracts::CardCollectionFactory::CollectionDistribution>",
+                  type: "core::array::Array::<contracts::AtemuCollectionFactory::CardsDistribution>",
                 },
               ],
               state_mutability: "view",
+            },
+          ],
+        },
+        {
+          type: "impl",
+          name: "UpgradeableImpl",
+          interface_name: "openzeppelin_upgrades::interface::IUpgradeable",
+        },
+        {
+          type: "interface",
+          name: "openzeppelin_upgrades::interface::IUpgradeable",
+          items: [
+            {
+              type: "function",
+              name: "upgrade",
+              inputs: [
+                {
+                  name: "new_class_hash",
+                  type: "core::starknet::class_hash::ClassHash",
+                },
+              ],
+              outputs: [],
+              state_mutability: "external",
             },
           ],
         },
@@ -1084,30 +1072,18 @@ const deployedContracts = {
               type: "core::starknet::contract_address::ContractAddress",
             },
             {
-              name: "card_collection_class_hash",
+              name: "collection_class_hash",
               type: "core::starknet::class_hash::ClassHash",
             },
             {
-              name: "random_oracle_contract_address",
+              name: "random_oracleless_address",
               type: "core::starknet::contract_address::ContractAddress",
-            },
-            {
-              name: "eth_address",
-              type: "core::starknet::contract_address::ContractAddress",
-            },
-            {
-              name: "random_oracle_callback_fee_limit",
-              type: "core::integer::u128",
-            },
-            {
-              name: "max_random_oracle_callback_fee_deposit",
-              type: "core::integer::u256",
             },
           ],
         },
         {
           type: "event",
-          name: "contracts::CardCollectionFactory::CardCollectionFactory::PackPhaseCreated",
+          name: "contracts::AtemuCollectionFactory::AtemuCollectionFactory::CollectionCreated",
           kind: "struct",
           members: [
             {
@@ -1116,7 +1092,7 @@ const deployedContracts = {
               kind: "key",
             },
             {
-              name: "collection",
+              name: "collection_address",
               type: "core::starknet::contract_address::ContractAddress",
               kind: "data",
             },
@@ -1126,7 +1102,7 @@ const deployedContracts = {
               kind: "data",
             },
             {
-              name: "num_cards",
+              name: "amount_cards_in_pack",
               type: "core::integer::u32",
               kind: "data",
             },
@@ -1134,7 +1110,61 @@ const deployedContracts = {
         },
         {
           type: "event",
-          name: "contracts::CardCollectionFactory::CardCollectionFactory::PackOpened",
+          name: "contracts::AtemuCollectionFactory::AtemuCollectionFactory::CollectionUpdated",
+          kind: "struct",
+          members: [
+            {
+              name: "owner",
+              type: "core::starknet::contract_address::ContractAddress",
+              kind: "key",
+            },
+            {
+              name: "collection_address",
+              type: "core::starknet::contract_address::ContractAddress",
+              kind: "data",
+            },
+            {
+              name: "pack_address",
+              type: "core::starknet::contract_address::ContractAddress",
+              kind: "data",
+            },
+            {
+              name: "amount_cards_in_pack",
+              type: "core::integer::u32",
+              kind: "data",
+            },
+          ],
+        },
+        {
+          type: "event",
+          name: "contracts::AtemuCollectionFactory::AtemuCollectionFactory::PackUpdated",
+          kind: "struct",
+          members: [
+            {
+              name: "owner",
+              type: "core::starknet::contract_address::ContractAddress",
+              kind: "key",
+            },
+            {
+              name: "collection_address",
+              type: "core::starknet::contract_address::ContractAddress",
+              kind: "data",
+            },
+            {
+              name: "pack_address",
+              type: "core::starknet::contract_address::ContractAddress",
+              kind: "data",
+            },
+            {
+              name: "amount_cards_in_pack",
+              type: "core::integer::u32",
+              kind: "data",
+            },
+          ],
+        },
+        {
+          type: "event",
+          name: "contracts::AtemuCollectionFactory::AtemuCollectionFactory::PackOpened",
           kind: "struct",
           members: [
             {
@@ -1143,7 +1173,7 @@ const deployedContracts = {
               kind: "key",
             },
             {
-              name: "collection",
+              name: "collection_address",
               type: "core::starknet::contract_address::ContractAddress",
               kind: "data",
             },
@@ -1160,50 +1190,8 @@ const deployedContracts = {
           ],
         },
         {
-          type: "struct",
-          name: "core::array::Span::<core::integer::u256>",
-          members: [
-            {
-              name: "snapshot",
-              type: "@core::array::Array::<core::integer::u256>",
-            },
-          ],
-        },
-        {
           type: "event",
-          name: "contracts::CardCollectionFactory::CardCollectionFactory::BatchCardsMinted",
-          kind: "struct",
-          members: [
-            {
-              name: "request_id",
-              type: "core::integer::u64",
-              kind: "data",
-            },
-            {
-              name: "minter",
-              type: "core::starknet::contract_address::ContractAddress",
-              kind: "data",
-            },
-            {
-              name: "card_collection",
-              type: "core::starknet::contract_address::ContractAddress",
-              kind: "data",
-            },
-            {
-              name: "num_cards",
-              type: "core::integer::u32",
-              kind: "data",
-            },
-            {
-              name: "token_ids_span",
-              type: "core::array::Span::<core::integer::u256>",
-              kind: "data",
-            },
-          ],
-        },
-        {
-          type: "event",
-          name: "contracts::CardCollectionFactory::CardCollectionFactory::CollectionDistributionsSet",
+          name: "contracts::AtemuCollectionFactory::AtemuCollectionFactory::CardsDistributionSet",
           kind: "struct",
           members: [
             {
@@ -1277,27 +1265,56 @@ const deployedContracts = {
         },
         {
           type: "event",
-          name: "contracts::CardCollectionFactory::CardCollectionFactory::Event",
+          name: "openzeppelin_upgrades::upgradeable::UpgradeableComponent::Upgraded",
+          kind: "struct",
+          members: [
+            {
+              name: "class_hash",
+              type: "core::starknet::class_hash::ClassHash",
+              kind: "data",
+            },
+          ],
+        },
+        {
+          type: "event",
+          name: "openzeppelin_upgrades::upgradeable::UpgradeableComponent::Event",
           kind: "enum",
           variants: [
             {
-              name: "PackPhaseCreated",
-              type: "contracts::CardCollectionFactory::CardCollectionFactory::PackPhaseCreated",
+              name: "Upgraded",
+              type: "openzeppelin_upgrades::upgradeable::UpgradeableComponent::Upgraded",
+              kind: "nested",
+            },
+          ],
+        },
+        {
+          type: "event",
+          name: "contracts::AtemuCollectionFactory::AtemuCollectionFactory::Event",
+          kind: "enum",
+          variants: [
+            {
+              name: "CollectionCreated",
+              type: "contracts::AtemuCollectionFactory::AtemuCollectionFactory::CollectionCreated",
+              kind: "nested",
+            },
+            {
+              name: "CollectionUpdated",
+              type: "contracts::AtemuCollectionFactory::AtemuCollectionFactory::CollectionUpdated",
+              kind: "nested",
+            },
+            {
+              name: "PackUpdated",
+              type: "contracts::AtemuCollectionFactory::AtemuCollectionFactory::PackUpdated",
               kind: "nested",
             },
             {
               name: "PackOpened",
-              type: "contracts::CardCollectionFactory::CardCollectionFactory::PackOpened",
+              type: "contracts::AtemuCollectionFactory::AtemuCollectionFactory::PackOpened",
               kind: "nested",
             },
             {
-              name: "BatchCardsMinted",
-              type: "contracts::CardCollectionFactory::CardCollectionFactory::BatchCardsMinted",
-              kind: "nested",
-            },
-            {
-              name: "CollectionDistributionsSet",
-              type: "contracts::CardCollectionFactory::CardCollectionFactory::CollectionDistributionsSet",
+              name: "CardsDistributionSet",
+              type: "contracts::AtemuCollectionFactory::AtemuCollectionFactory::CardsDistributionSet",
               kind: "nested",
             },
             {
@@ -1310,11 +1327,16 @@ const deployedContracts = {
               type: "openzeppelin_security::reentrancyguard::ReentrancyGuardComponent::Event",
               kind: "flat",
             },
+            {
+              name: "UpgradeableEvent",
+              type: "openzeppelin_upgrades::upgradeable::UpgradeableComponent::Event",
+              kind: "flat",
+            },
           ],
         },
       ],
       classHash:
-        "0x5758e0e5b3b2f27dd4a4d6b51fd3b56cd1b031165e0f2890ec06f2d546eb2ec",
+        "0x45674a309988db6b1511a17d023587a614a930600b5a636ea23a66ad23d3064",
     },
   },
 } as const;
