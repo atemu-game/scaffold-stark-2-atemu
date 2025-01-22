@@ -823,6 +823,22 @@ const deployedContracts = {
             },
             {
               type: "function",
+              name: "update_pack",
+              inputs: [
+                {
+                  name: "pack",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+                {
+                  name: "pack_address",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [],
+              state_mutability: "external",
+            },
+            {
+              type: "function",
               name: "set_collection_class_hash",
               inputs: [
                 {
@@ -1121,6 +1137,33 @@ const deployedContracts = {
         },
         {
           type: "event",
+          name: "contracts::AtemuCollectionFactory::AtemuCollectionFactory::PackUpdated",
+          kind: "struct",
+          members: [
+            {
+              name: "owner",
+              type: "core::starknet::contract_address::ContractAddress",
+              kind: "key",
+            },
+            {
+              name: "collection_address",
+              type: "core::starknet::contract_address::ContractAddress",
+              kind: "data",
+            },
+            {
+              name: "pack_address",
+              type: "core::starknet::contract_address::ContractAddress",
+              kind: "data",
+            },
+            {
+              name: "amount_cards_in_pack",
+              type: "core::integer::u32",
+              kind: "data",
+            },
+          ],
+        },
+        {
+          type: "event",
           name: "contracts::AtemuCollectionFactory::AtemuCollectionFactory::PackOpened",
           kind: "struct",
           members: [
@@ -1257,6 +1300,11 @@ const deployedContracts = {
             {
               name: "CollectionUpdated",
               type: "contracts::AtemuCollectionFactory::AtemuCollectionFactory::CollectionUpdated",
+              kind: "nested",
+            },
+            {
+              name: "PackUpdated",
+              type: "contracts::AtemuCollectionFactory::AtemuCollectionFactory::PackUpdated",
               kind: "nested",
             },
             {

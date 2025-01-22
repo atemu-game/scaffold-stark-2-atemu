@@ -27,6 +27,7 @@ trait ICardCollectionFactory<TContractState> {
         pack_address: ContractAddress,
         amount_cards_in_pack: u32,
     );
+    fn update_pack(ref self: TContractState, pack: ContractAddress, pack_address: ContractAddress);
     fn set_collection_class_hash(ref self: TContractState, new_class_hash: ClassHash);
     fn set_cards_distribution(
         ref self: TContractState, collection: ContractAddress, cards: Array<CardsDistribution>,
@@ -113,6 +114,7 @@ mod AtemuCollectionFactory {
         all_collections: Vec<ContractAddress>,
         all_packs: Vec<ContractAddress>,
         is_collection: Map<ContractAddress, bool>,
+        is_pack: Map<ContractAddress, bool>,
         // collection address -> CollectionPackInfo
         mapping_collection_info: Map<ContractAddress, CollectionPackInfo>,
         // pack address -> CollectionPackInfo
@@ -131,6 +133,7 @@ mod AtemuCollectionFactory {
     enum Event {
         CollectionCreated: CollectionCreated,
         CollectionUpdated: CollectionUpdated,
+        PackUpdated: PackUpdated,
         PackOpened: PackOpened,
         CardsDistributionSet: CardsDistributionSet,
         #[flat]
@@ -159,6 +162,15 @@ mod AtemuCollectionFactory {
         amount_cards_in_pack: u32,
     }
 
+    #[derive(Drop, starknet::Event)]
+    struct PackUpdated {
+        #[key]
+        owner: ContractAddress,
+        collection_address: ContractAddress,
+        pack_address: ContractAddress,
+        amount_cards_in_pack: u32,
+    }
+
     #[derive(Drop, Copy, starknet::Event)]
     struct PackOpened {
         #[key]
@@ -178,6 +190,7 @@ mod AtemuCollectionFactory {
         pub const REQUESTOR_NOT_SELF: felt252 = 'Requestor is not self';
         pub const INVALID_PACK_OWNER: felt252 = 'Caller does not own the pack';
         pub const INVALID_COLLECTION: felt252 = 'Invalid Card Collection';
+        pub const INVALID_PACK: felt252 = 'Invalid Card Pack';
     }
 
     // Random oracleless contract:
@@ -239,6 +252,7 @@ mod AtemuCollectionFactory {
             };
 
             self.is_collection.entry(collection).write(true);
+            self.is_pack.entry(pack_address).write(true);
             self.all_collections.append().write(collection);
             self.all_packs.append().write(pack_address);
             self.mapping_collection_info.entry((collection)).write(collection_pack_detail);
@@ -291,7 +305,6 @@ mod AtemuCollectionFactory {
                 collection_address: collection, pack_address, amount_cards_in_pack,
             };
             self.mapping_collection_info.entry((collection)).write(new_card_pack_details);
-            self.mapping_pack_info.entry((pack_address)).write(new_card_pack_details);
             self
                 .emit(
                     CollectionUpdated {
@@ -299,6 +312,27 @@ mod AtemuCollectionFactory {
                         collection_address: collection,
                         pack_address,
                         amount_cards_in_pack,
+                    },
+                );
+        }
+
+        fn update_pack(
+            ref self: ContractState, pack: ContractAddress, pack_address: ContractAddress,
+        ) {
+            self.ownable.assert_only_owner();
+            self.assert_only_card_collection(pack);
+
+            let new_card_pack_details = CollectionPackInfo {
+                collection_address: pack, pack_address, amount_cards_in_pack: 0,
+            };
+            self.mapping_pack_info.entry((pack_address)).write(new_card_pack_details);
+            self
+                .emit(
+                    PackUpdated {
+                        owner: self.ownable.owner(),
+                        collection_address: pack,
+                        pack_address,
+                        amount_cards_in_pack: 0,
                     },
                 );
         }
@@ -416,6 +450,11 @@ mod AtemuCollectionFactory {
             assert(is_collection, Errors::INVALID_COLLECTION);
         }
 
+        fn assert_only_card_pack(self: @ContractState, pack: ContractAddress) {
+            let is_pack = self.is_pack.entry(pack).read();
+            assert(is_pack, Errors::INVALID_PACK);
+        }
+
         fn _mint_cards(
             ref self: ContractState, collection_address: ContractAddress, minter: ContractAddress,
         ) {
@@ -468,7 +507,8 @@ mod AtemuCollectionFactory {
             for i in 0..amount_cards_in_pack {
                 // 5a. Normalize random_u256 to [0, total_weight)
                 let random_contract_address = self.random_oracleless_address.read();
-                let random_contract_dispatcher = contracts::AtemuCollectionFactory::IRandomDispatcher {
+                let random_contract_dispatcher =
+                    contracts::AtemuCollectionFactory::IRandomDispatcher {
                     contract_address: random_contract_address,
                 };
                 let mut random_u256: u256 = random_contract_dispatcher.u256(i.into());
